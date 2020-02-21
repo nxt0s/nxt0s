@@ -1,0 +1,7 @@
+_boot {
+version:0.1.0
+kernel_version:0.0.1
+register_version:1.0.0
+name:BOOT_REG
+command_reg:commands.reg
+}

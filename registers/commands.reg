@@ -1,0 +1,8 @@
+_commands {
+name:COMMANDS_REG
+ls:./src/commands/ls.js
+cd:./src/commands/cd.js
+echo:./src/commands/echo.js
+exit:./src/commands/exit.js
+sos:./src/commands/sos.js
+}
