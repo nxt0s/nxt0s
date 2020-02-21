@@ -1,6 +1,7 @@
 const reg_manager = require("./src/reg_manager");
 const fs = require("fs");
 const readline = require("readline");
+const chalk = require("chalk");
 
 let found_commands = {};
 
@@ -41,7 +42,7 @@ const run = async () => {
     });
     let boot_reg = reg_manager.decompile_reg("boot.reg");
     await sleep(1000);
-    console.log("found register "+boot_reg.name+" at location 0x"+boot_reg.name.hexEncode());
+    console.log(chalk.green("found register "+boot_reg.name+" at location 0x"+boot_reg.name.hexEncode()));
     console.log("extracting register values for "+boot_reg.name);
     await sleep(1000);
     let keys = Object.keys(boot_reg);
@@ -55,7 +56,7 @@ const run = async () => {
     console.log("initializing command registry...");
     let command_reg = reg_manager.decompile_reg(""+boot_reg.command_reg);
     await sleep(2500);
-    console.log("found register "+command_reg.name+" at 0x"+command_reg.name.hexEncode());
+    console.log(chalk.green("found register "+command_reg.name+" at 0x"+command_reg.name.hexEncode()));
     keys = Object.keys(command_reg);
 
     for (let i = 0; i < keys.length; i++) {
@@ -73,11 +74,11 @@ const run = async () => {
         } else {
             total++;
             if (fs.existsSync(command_reg[keys[i]])) {
-                console.log(command_reg[keys[i]]+" was found at 0x"+command_reg[keys[i]].hexEncode());
+                console.log(chalk.cyan(command_reg[keys[i]]+" was found at 0x"+command_reg[keys[i]].hexEncode()));
                 found_commands[keys[i]] = require(command_reg[keys[i]]);
                 count++;
             } else {
-                console.log(command_reg[keys[i]]+" was not found, avoiding");
+                console.log(chalk.yellow(command_reg[keys[i]]+" was not found, avoiding"));
             }
         }
     }
@@ -89,36 +90,35 @@ const run = async () => {
     console.log("done!")
     await sleep(1000);
 
-    if (!fs.existsSync("./registers/userinfo.reg")) {
-        console.log("\nuserinfo.reg not found! creating now...")
-
-        rl.question("enter a username: ", (username) => {
-            rl.question("enter a password: ", (password) => {
-                fs.writeFile("./registers/userinfo.reg", "_userinfo {\nusername:"+username+"\npassword:"+password+"\n}", (error) => {
-                    completedBoot();
-                })
-            });
-        });
-    } else {
-        let userinfo = reg_manager.decompile_reg("userinfo.reg");
-
-        rl.question("username: ", (username) => {
-            rl.question("password: ", async (password) => {
-                if (username == userinfo.username && password == userinfo.password) {
-                    rl.close()
-                    completedBoot();
-                } else {
-                    await sleep(500);
-                    console.log("does not match. aborting...");
-                    rl.close();
-                }
-            });
-        });
-
-    }
-
     await exec('clear', function(error, stdout, stderr) {
         console.log('' + stdout);
+        if (!fs.existsSync("./registers/userinfo.reg")) {
+            console.log("\nuserinfo.reg not found! creating now...")
+    
+            rl.question("enter a username: ", (username) => {
+                rl.question("enter a password: ", (password) => {
+                    fs.writeFile("./registers/userinfo.reg", "_userinfo {\nusername:"+username+"\npassword:"+password+"\n}", (error) => {
+                        completedBoot();
+                    })
+                });
+            });
+        } else {
+            let userinfo = reg_manager.decompile_reg("userinfo.reg");
+    
+            rl.question("username: ", (username) => {
+                rl.question("password: ", async (password) => {
+                    if (username == userinfo.username && password == userinfo.password) {
+                        rl.close()
+                        completedBoot();
+                    } else {
+                        await sleep(500);
+                        console.log(chalk.red("does not match. aborting..."));
+                        rl.close();
+                    }
+                });
+            });
+    
+        }
         if (error !== null) {
             console.log('exec error: ' + error);
         }
@@ -151,7 +151,7 @@ const input = (rl, userinfo_reg) => {
     let os_state = reg_manager.decompile_reg("os_state.reg");
     rl.question(userinfo_reg.username+"@nxtos "+os_state.current_directory+" # ", (command) => {
         if (found_commands[command.split(" ")[0]] != undefined) {
-            found_commands[command.split(" ")[0]]();
+            found_commands[command.split(" ")[0]](command);
             input(rl, userinfo_reg);
         } else {
             console.log("error: command '"+command.split(" ")[0]+"' not found")

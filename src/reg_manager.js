@@ -42,7 +42,7 @@ exports.set_reg_value = (register_name, key, value) => {
     lines = lines.join("\n")
 
     fs.writeFile("./registers/"+register_name, lines, (error) => {
-        console.log("login successful")
+        //console.log("login successful")
     });
     
 }

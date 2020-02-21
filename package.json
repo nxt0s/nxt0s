@@ -1,0 +1,27 @@
+{
+  "name": "nxtos",
+  "version": "0.1.0",
+  "description": "A linux-like emulation enviornment for JavaScript.",
+  "main": "main.js",
+  "scripts": {
+    "test": "node main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nxtos/nxtos.git"
+  },
+  "keywords": [
+    "OS",
+    "NXTOS",
+    "next"
+  ],
+  "author": "aejester",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nxtos/nxtos/issues"
+  },
+  "homepage": "https://github.com/nxtos/nxtos#readme",
+  "dependencies": {
+    "chalk": "^3.0.0"
+  }
+}

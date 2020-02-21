@@ -1,3 +1,3 @@
-module.exports = () => {
-    console.log("HELP ON ITS WAY")
+module.exports = (command) => {
+    console.log(chalk.red("HELP ON ITS WAY"));
 }
