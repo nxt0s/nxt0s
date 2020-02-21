@@ -98,7 +98,10 @@ const run = async () => {
             rl.question("enter a username: ", (username) => {
                 rl.question("enter a password: ", (password) => {
                     fs.writeFile("./registers/userinfo.reg", "_userinfo {\nusername:"+username+"\npassword:"+password+"\n}", (error) => {
-                        completedBoot();
+                        if (!fs.existsSync("./usr/"+username)) {
+                            fs.mkdirSync("./usr/"+username);
+                            completedBoot();
+                        }
                     })
                 });
             });
@@ -140,7 +143,7 @@ const completedBoot = () => {
 
     reg_manager.set_reg_value("userinfo.reg", "lastLogin", lastLogin)
 
-    console.log("nxtos: "+boot_reg.version+" - kernel verson: "+boot_reg.kernel_version+" register framework: "+boot_reg.register_version+"\n")
+    console.log("nxt0s: "+boot_reg.version+" - kernel verson: "+boot_reg.kernel_version+" register framework: "+boot_reg.register_version+"\n")
     console.log("last login: "+lastLogin);
     console.log("\n\n")
     input(rl, userinfo_reg);
@@ -149,7 +152,7 @@ const completedBoot = () => {
 
 const input = (rl, userinfo_reg) => {
     let os_state = reg_manager.decompile_reg("os_state.reg");
-    rl.question(userinfo_reg.username+"@nxtos "+os_state.current_directory+" # ", (command) => {
+    rl.question(userinfo_reg.username+"@nxt0s "+os_state.current_directory+" # ", (command) => {
         if (found_commands[command.split(" ")[0]] != undefined) {
             found_commands[command.split(" ")[0]](command);
             input(rl, userinfo_reg);

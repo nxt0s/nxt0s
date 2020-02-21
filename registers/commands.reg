@@ -7,4 +7,7 @@ exit:./src/commands/exit.js
 sos:./src/commands/sos.js
 catalog:./src/commands/catalog.js
 clear:./src/commands/clear.js
+mkdir:./src/commands/mkdir.js
+cat:./src/commands/cat.js
+touch:./src/commands/touch.js
 }
