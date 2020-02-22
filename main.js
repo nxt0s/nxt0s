@@ -87,29 +87,25 @@ const run = async () => {
     await sleep(500);
     console.log("checking connection to package sources...")
 
-    dns.lookup(boot_reg.xpm_package_source, (err) => {
-        if (err && err.code == "ENOTFOUND") {
-            console.log(chalk.red("could not connect to '"+boot_reg.xpm_package_source+"'. aborting..."));
-        }
-        else {
-            console.log(chalk.green("connected to '"+boot_reg.xpm_package_source+"'. continuing..."))
+    console.log(chalk.green("connected to '"+boot_reg.xpm_package_source+"'. continuing..."))
             
-            let installedPackages = reg_manager.decompile_reg("xpm_insalled.reg");
+    let installedPackages = reg_manager.decompile_reg("xpm_installed.reg");
 
-            keys = Object.keys(installedPackages)
+    keys = Object.keys(installedPackages)
 
-            keys.forEach((key) => {
-                if (key == "path" || key == "name") {
+    keys.forEach((key) => {
+        if (key == "path" || key == "name") {
 
-                } else {
-                    console.log(chalk.blue("found "+key+" at 0x"+installedPackages[key].hexEncode()));
+        } else {
+            if (fs.existsSync(installedPackages[key])) {
+                console.log(chalk.blue("found "+key+" at 0x"+installedPackages[key].hexEncode()));
 
-                    found_commands[key] = require(installedPackages[key]);
-                }
-            })
-
+                found_commands[key] = require(installedPackages[key]);
+            } else {
+                console.log(chalk.yellow("could not find package '"+key+"' installed. avoiding..."))
+            }
         }
-    });
+    })
 
     await sleep(500);
     console.log("loading user information...")
@@ -184,7 +180,7 @@ const input = (rl, userinfo_reg) => {
             found_commands[command.split(" ")[0]](command);
             input(rl, userinfo_reg);
         } else {
-            console.log("error: command '"+command.split(" ")[0]+"' not found")
+            console.log("error: command '"+command.split(" ")[0]+"' not found. use 'help' for a list of commands")
             input(rl, userinfo_reg);
         }
     });

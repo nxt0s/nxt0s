@@ -4,5 +4,5 @@ kernel_version:0.0.1
 register_version:1.0.0
 name:BOOT_REG
 command_reg:commands.reg
-xpm_package_source:https://github.com/Billy-Ellis/Exploit-Challenges/
+xpm_package_source:https://github.com/nxt0s/packages/
 }

@@ -17,7 +17,7 @@ module.exports = (args = []) => {
             request(package_source+"blob/master/"+package+".zip?raw=true")
             .pipe(fs.createWriteStream('./installed/'+package+'.zip'))
             .on('close', function () {
-                fs.createReadStream("./installed/"+package+".zip").pipe(unzipper.Extract({ path: './installed/'+package})).on("close", () => {
+                fs.createReadStream("./installed/"+package+".zip").pipe(unzipper.Extract({ path: './installed/'})).on("close", () => {
                     reg_manager.append_reg_value("xpm_installed.reg", package, "./installed/"+package+"/index.js")
                     fs.unlinkSync('./installed/'+package+'.zip')
                 });
