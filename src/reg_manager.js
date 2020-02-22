@@ -42,7 +42,24 @@ exports.set_reg_value = (register_name, key, value) => {
     lines = lines.join("\n")
 
     fs.writeFile("./registers/"+register_name, lines, (error) => {
-        //console.log("login successful")
+        
     });
     
+}
+
+exports.append_reg_value = (register_name, key, value) => {
+    const read_register = fs.readFileSync("./registers/"+register_name, "utf8");
+    let lines = read_register.split("\n");
+
+    lines.pop();
+
+    lines.push(key+":"+value);
+
+    lines.push("}");
+
+    lines = lines.join("\n");
+
+    fs.writeFile("./registers/"+register_name, lines, (error) => {
+        
+    });
 }

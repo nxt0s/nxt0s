@@ -22,6 +22,8 @@
   },
   "homepage": "https://github.com/nxtos/nxtos#readme",
   "dependencies": {
-    "chalk": "^3.0.0"
+    "chalk": "^3.0.0",
+    "request": "^2.88.2",
+    "unzipper": "^0.10.9"
   }
 }

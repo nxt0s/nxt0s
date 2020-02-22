@@ -10,4 +10,6 @@ clear:./src/commands/clear.js
 mkdir:./src/commands/mkdir.js
 cat:./src/commands/cat.js
 touch:./src/commands/touch.js
+xpm:./src/commands/xpm.js
+help:./src/commands/help.js
 }

@@ -2,6 +2,7 @@ const reg_manager = require("./src/reg_manager");
 const fs = require("fs");
 const readline = require("readline");
 const chalk = require("chalk");
+const dns = require("dns");
 
 let found_commands = {};
 
@@ -22,8 +23,6 @@ const sleep = (ms) => {
 }
 
 var exec = require('child_process').exec, child;
-
-//THIS COMMENT
 
 const run = async () => {
 
@@ -84,7 +83,35 @@ const run = async () => {
     }
     console.log("\nfound "+count+"/"+total+" commands, proceeding")
     console.log("\n")
-    await sleep(500)
+    console.log("initializing xpm...")
+    await sleep(500);
+    console.log("checking connection to package sources...")
+
+    dns.lookup(boot_reg.xpm_package_source, (err) => {
+        if (err && err.code == "ENOTFOUND") {
+            console.log(chalk.red("could not connect to '"+boot_reg.xpm_package_source+"'. aborting..."));
+        }
+        else {
+            console.log(chalk.green("connected to '"+boot_reg.xpm_package_source+"'. continuing..."))
+            
+            let installedPackages = reg_manager.decompile_reg("xpm_insalled.reg");
+
+            keys = Object.keys(installedPackages)
+
+            keys.forEach((key) => {
+                if (key == "path" || key == "name") {
+
+                } else {
+                    console.log(chalk.blue("found "+key+" at 0x"+installedPackages[key].hexEncode()));
+
+                    found_commands[key] = require(installedPackages[key]);
+                }
+            })
+
+        }
+    });
+
+    await sleep(500);
     console.log("loading user information...")
     await sleep(700);
     console.log("done!")
@@ -161,6 +188,10 @@ const input = (rl, userinfo_reg) => {
             input(rl, userinfo_reg);
         }
     });
+}
+
+const xpm_init = () => {
+
 }
 
 run();
